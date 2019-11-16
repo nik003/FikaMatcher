@@ -4,32 +4,63 @@ const bodyparser = require("body-parser");
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.render("index", {layout:false, match:"NO MATCH"})
+  res.render("index", {
+    layout: false,
+    match: "NO MATCH"
+  })
 });
 
-router.post('/', (req,res)=> {
-  console.log(req.body);
-  handleInput(req.body).then((result)=>{
-    res.render("index",{layout: false, match:result.match, "error":result.error});
+router.post('/', (req, res) => {
+  handleInput(req.body).then((result) => {
+    if(result.match){
+      res.render("match",{layout: false, "matchName":result.matchName});
+    }else{
+      res.render("index", {
+        layout: false,
+        match: result.match,
+        "error": "No match found, please wait until another person contacts you"
+      });
+    }
   });
 })
 
-function handleInput(params){
-  console.log(params);
-  return new Promise((resolve, reject)=>{
-    if(params.type === '' || params.token === '' || params.date === '' || params.fromTime === '' || params.fromTime === ''){
-      resolve({"error": "Missing data", "match" : false});
+function handleInput(params) {
+  return new Promise((resolve, reject) => {
+    if (params.type === '' || params.token === '' || params.date === '' || params.fromTime === '' || params.fromTime === '' || params.userId === '') {
+      resolve({
+        "error": "Missing data",
+        "match": false
+      });
     }
-    //dbConnector.insertRow(params.type, params.token, params.date, params.time).then(dbConnector.getAll).then(findMatch).then(resolve)
+    dbConnector.insertRow(params).then(dbConnector.getAll).then(findMatch).then(resolve)
   })
 }
-function findMatch(dbData, type, userId, date, fromTime, toTime){
-  return new Promise((resolve,reject)=>{
-    console.log(dbData);
-    resolve({"error": "", "match": true});
 
+function findMatch(data) {
+  return new Promise((resolve, reject) => {
+    console.log(data.dbData.recordset[0]);
+    for (var i = 0; i < data.dbData.recordset.length; i++) {
+      var dbObj = data.dbData.recordset[i];
+      var fromDate1 = new Date(dbObj.timeFrom).getTime();
+      var toDate1 = new Date(dbObj.timeTo).getTime();
+      var fromDate2 = new Date(data.params.start_time).getTime();
+      var toDate2 = new Date(data.params.end_time).getTime();
+      if ((fromDate1 <= fromDate2 && toDate1 >= fromDate2) || (fromDate2 <= fromDate1 && toDate2 >= fromDate1)) {
+        if (dbObj.userId != data.params.userId) {
+          resolve({
+            "error": "",
+            "match": true,
+            "matchName":dbObj.userId
+
+          });
+        }
+      }
+    }
+    resolve({
+      "error": "",
+      "match": false
+    });
   })
-
 }
 
 module.exports = router;
