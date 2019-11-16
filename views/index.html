@@ -7,62 +7,70 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.4/bluebird.min.js"></script>
 	<script src="https://secure.aadcdn.microsoftonline-p.com/lib/1.0.0/js/msal.js"></script>
-	<script src="/js/index.js"></script>
-</head>
+	<script src="index.js"></script>
 
-<body>
-	{{#if error}}
-	<h1 style="color:red">{{error}}</h1>
-	{{/if}}
-	<h4 id="WelcomeMessage"></h4>
-	<button id="SignIn" onclick="signIn()">Sign In</button><br /><br />
-	<pre id="json"></pre>
-	<form name="form" action="" method="POST">
-		<div class="form-group">
-			<input type="hidden" name="token" id="input-token">
-			<input type="hidden" name="userId" id="userId">
-			<table cellpadding="10">
-				<tr>
-					<td>
-						<h3> What are you looking for?</h3>
-					</td>
-					<td>
-						<select name="type" class="form-control form-control-lg">
+</head>
+<style>
+.row{
+	padding: 12px;
+}
+</style>
+<body style="overflow:hidden; padding: 0%; margin: 0%;">
+	<div class="container-fluid">
+		<form name="form" action="" method="POST" style="opacity: 1;">
+			<div class="form-group">
+				<input type="hidden" name="token" id="input-token">
+				<div class="row">
+					<div class="col-4"></div>
+					<div class="col-8">
+						<img src="background.jpg" alt=""
+							style="z-index:-2; opacity: 0.5; position: absolute; right: 0px;width: 100%;">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-3">
+						<h4 id="WelcomeMessage"></h4>
+						<button id="SignIn" onclick="signIn()">Sign In</button><br /><br />
+					</div>
+					<div class="col-9">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-3">
+						<label for="eventPicker">What are you looking for?</label>
+						<select name="type" id="eventPicker" class="form-control form-control-lg">
 							<option value="fika">Fika</option>
 							<option value="lunch">Lunch</option>
 						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<h3> Which day you are you planning for?</h3>
-					</td>
-					<td>
-						<input name="date" type="date">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<h3>Within what time you want to have it?</h3>
-					</td>
-					<td>
-						<h3>Start time: </h3>
-						<div class="input-group mb-3">
-							<input name="start_time" type="time">
-						</div>
-					</td>
-					<td>
-						<h3>End time: </h3>
-						<div class="input-group mb-3">
-							<input name="end_time" type="time">
-						</div>
-					</td>
-				</tr>
-			</table>
-			<input type="submit" value="Submit">
-		</div>
-	</form>
-
+					</div>
+					<div class="col-9">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-3">
+						<label for="datePicker">Which day you are you planning for?</label>
+						<input name="date" type="date" id="datePicker">
+					</div>
+					<div class="col-9">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2 col-xl-1">
+						<label for="startTime">Start Time</label>
+						<input name="start_time" type="time" id="startTime">
+					</div>
+					<div class="col-md-2 col-xl-1">
+						<label for="endTime">End time</label>
+						<input name="end_time" type="time" id="endTime">
+					</div>
+					<div class="col-8"></div>
+				</div>
+				<pre id="json"></pre>
+				
+				<input type="submit" value="Submit">
+			</div>
+		</form>
+	</div>
 	<script>
 		var form = document.getElementsByTagName('form').item(0);
 
@@ -76,7 +84,6 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
 		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
 		</script>
-
 </body>
 
 </html>
