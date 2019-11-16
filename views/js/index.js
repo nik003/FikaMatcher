@@ -142,4 +142,40 @@ window.addEventListener('load', function () {
     } else {
         console.error('Please set a valid login type');
     }
+
+
+    var form = document.getElementsByTagName('form').item(0);
+    form.onsubmit = function (e) {
+        // stop the regular form submission
+        e.preventDefault();
+
+        // collect the form data while iterating over the inputs
+        var data = {};
+        for (var i = 0, ii = form.length; i < ii; ++i) {
+            var input = form[i];
+            if (input.name) {
+                data[input.name] = input.value;
+            }
+        }
+
+        data.token = window.localStorage.getItem("msal.idtoken");
+        data.userId = myMSALObj.getAccount().idToken.aud;
+
+        debugger;
+
+        fetch(
+            '', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(call => call.json())
+            .then(x => console.log(x));
+        return false;
+    };
+
+
 })
