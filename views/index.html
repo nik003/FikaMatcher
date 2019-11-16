@@ -11,6 +11,9 @@
 </head>
 
 <body>
+	{{#if error}}
+	<h1 style="color:red">{{error}}</h1>
+	{{/if}}
 	<h4 id="WelcomeMessage"></h4>
 	<button id="SignIn" onclick="signIn()">Sign In</button><br /><br />
 	<pre id="json"></pre>
@@ -61,33 +64,7 @@
 
 	<script>
 		var form = document.getElementsByTagName('form').item(0);
-		form.onsubmit = function (e) {
-			// stop the regular form submission
-			e.preventDefault();
-
-			// collect the form data while iterating over the inputs
-			var data = {};
-			for (var i = 0, ii = form.length; i < ii; ++i) {
-				var input = form[i];
-				if (input.name) {
-					data[input.name] = input.value;
-				}
-			}
-
-			fetch(
-				'', {
-				method: 'POST',
-				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
-				.then(call => call.json())
-				.then(x => console.log(x));
-			return false;
-		};
-
+		
 	</script>
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">

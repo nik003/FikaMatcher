@@ -69,22 +69,6 @@ function showWelcomeMessage() {
 }
 
 
-//This function can be removed if you do not need to support IE
-function acquireTokenRedirectAndCallMSGraph() {
-    //Always start with acquireTokenSilent to obtain a token in the signed in user from cache
-    myMSALObj.acquireTokenSilent(requestObj).then(function (tokenResponse) {
-        callMSGraph(graphConfig.graphMeEndpoint, tokenResponse.accessToken, graphAPICallback);
-    }).catch(function (error) {
-        console.log(error);
-        // Upon acquireTokenSilent failure (due to consent or interaction or login required ONLY)
-        // Call acquireTokenRedirect
-        if (requiresInteraction(error.errorCode)) {
-            myMSALObj.acquireTokenRedirect(requestObj);
-        }
-    });
-}
-
-
 function authRedirectCallBack(error, response) {
     if (error) {
         console.log(error);
@@ -92,6 +76,7 @@ function authRedirectCallBack(error, response) {
     else {
         if (response.tokenType === "access_token") {
             callMSGraph(graphConfig.graphEndpoint, response.accessToken, graphAPICallback);
+            console.log("in authRedirectCallBack")
         } else {
             console.log("token type is:" + response.tokenType);
         }
@@ -120,62 +105,29 @@ var isEdge = msedge > 0;
 var loginType = "REDIRECT"; // isIE ? "REDIRECT" : "POPUP";
 
 window.addEventListener('load', function () {
-
     if (loginType === 'POPUP') {
+        console.log("popup");
         if (myMSALObj.getAccount()) {// avoid duplicate code execution on page load in case of iframe and popup window.
             showWelcomeMessage();
             acquireTokenPopupAndCallMSGraph();
         }
     }
     else if (loginType === 'REDIRECT') {
-
+        console.log("redirect");
+        console.log(window.localStorage.getItem("msal.session.state"))
         document.getElementById("SignIn").onclick = function () {
             myMSALObj.loginRedirect(requestObj);
         };
         if (myMSALObj.getAccount() && !myMSALObj.isCallback(window.location.hash)) {// avoid duplicate code execution on page load in case of iframe and popup window.
             showWelcomeMessage();
-            acquireTokenRedirectAndCallMSGraph();
+            //acquireTokenRedirectAndCallMSGraph();
         }
-
-        //myMSALObj.loginRedirect(requestObj);
-
     } else {
         console.error('Please set a valid login type');
     }
-
-
-    var form = document.getElementsByTagName('form').item(0);
-    form.onsubmit = function (e) {
-        // stop the regular form submission
-        e.preventDefault();
-
-        // collect the form data while iterating over the inputs
-        var data = {};
-        for (var i = 0, ii = form.length; i < ii; ++i) {
-            var input = form[i];
-            if (input.name) {
-                data[input.name] = input.value;
-            }
-        }
-
-        data.token = window.localStorage.getItem("msal.idtoken");
-        data.userId = myMSALObj.getAccount().idToken.aud;
-
-        debugger;
-
-        fetch(
-            '', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(call => call.json())
-            .then(x => console.log(x));
-        return false;
-    };
-
-
+    if(window.localStorage.getItem("msal.session.state") === null){
+      console.log(localStorage.getItem("msal.session.state"))
+      console.log("apan sover")
+      myMSALObj.loginRedirect(requestObj);
+    }
 })

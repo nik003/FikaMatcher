@@ -9,11 +9,27 @@ router.get('/', (req, res) => {
 
 router.post('/', (req,res)=> {
   console.log(req.body);
-  res.render("index",{layout: false, match:"POSTED"});
+  handleInput(req.body).then((result)=>{
+    res.render("index",{layout: false, match:result.match, "error":result.error});
+  });
 })
 
 function handleInput(params){
-  dbConnector.insertRow()
+  console.log(params);
+  return new Promise((resolve, reject)=>{
+    if(params.type === '' || params.token === '' || params.date === '' || params.fromTime === '' || params.fromTime === ''){
+      resolve({"error": "Missing data", "match" : false});
+    }
+    //dbConnector.insertRow(params.type, params.token, params.date, params.time).then(dbConnector.getAll).then(findMatch).then(resolve)
+  })
+}
+function findMatch(dbData, type, userId, date, fromTime, toTime){
+  return new Promise((resolve,reject)=>{
+    console.log(dbData);
+    resolve({"error": "", "match": true});
+
+  })
 
 }
+
 module.exports = router;

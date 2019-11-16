@@ -13,31 +13,36 @@ function connect() {
   return sql.connect(config);
 }
 
-function insertRow() {
-  connect().then((pool) => {
-    const request = new sql.Request(pool)
-    var fromDate = new Date("2019-03-22 01:01:01");
-    var toDate = new Date("2019-03-22 01:01:02")
-    request.input("type", sql.NVarChar, 'Fika');
-    request.input("userid", sql.NVarChar, '1231234132432');
-    request.input("timeFrom", sql.DateTime, fromDate);
-    request.input("timeTo", sql.DateTime, toDate);
-    request.query("INSERT INTO table_name (type, userId, timeFrom, timeTo) VALUES (@type, @userid, @timeFrom, @timeTo)", function(err, recordsets) {
-      console.log(recordsets);
-      console.log(err);
-      pool.close();
+function insertRow(type, userId, date, fromTime, toTime) {
+  return new Promise((resolve, reject) => {
+    connect().then((pool) => {
+      const request = new sql.Request(pool)
+      var fromDateTime = date + " " + fromTime
+      var toDateTime = date + " " + toTime
+      var fromDate = new Date(fromDateTime);
+      var toDate = new Date(toDateTime)
+      request.input("type", sql.NVarChar, type);
+      request.input("userid", sql.NVarChar, userId);
+      request.input("timeFrom", sql.DateTime, fromTime);
+      request.input("timeTo", sql.DateTime, toTime);
+      request.query("INSERT INTO table_name (type, userId, timeFrom, timeTo) VALUES (@type, @userid, @timeFrom, @timeTo)", function(err, recordsets) {
+        console.log(recordsets);
+        console.log(err);
+        pool.close();
+        resolve(type, userId, date, fromTime, toTime);
+      });
     });
   });
 }
 
-function getAll() {
-  return new Promise((resolve , reject)=>{
+function getAll(type, userId, date, fromTime, toTime) {
+  return new Promise((resolve, reject) => {
     console.log("apan sover");
     connect().then((pool) => {
       const request = new sql.Request(pool)
-      request.query("SELECT * from table_name").then((result)=> {
+      request.query("SELECT * from table_name").then((result) => {
         pool.close()
-        resolve(result);
+        resolve(result, type, userId, date, fromTime, toTime);
 
       });
     });
@@ -46,5 +51,5 @@ function getAll() {
 module.exports = {
   "connect": connect,
   "getAll": getAll,
-  "insertRow":insertRow
+  "insertRow": insertRow
 }
