@@ -62,7 +62,7 @@ function graphAPICallback(data) {
 
 function showWelcomeMessage() {
   var divWelcome = document.getElementById('WelcomeMessage');
-  divWelcome.innerHTML = 'Welcome ' + myMSALObj.getAccount().userName + "to Microsoft Graph API";
+  divWelcome.innerHTML = 'Welcome ' + myMSALObj.getAccount().userName;
   var loginbutton = document.getElementById('SignIn');
   loginbutton.innerHTML = 'Sign Out';
   loginbutton.setAttribute('onclick', 'signOut();');
