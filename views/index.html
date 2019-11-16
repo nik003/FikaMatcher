@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.4/bluebird.min.js"></script>
+	<script src="https://secure.aadcdn.microsoftonline-p.com/lib/1.0.0/js/msal.js"></script>
+	<script src="/js/index.js"></script>
+</head>
+
+<body>
+	<h4 id="WelcomeMessage"></h4>
+	<button id="SignIn" onclick="signIn()">Sign In</button><br /><br />
+	<pre id="json"></pre>
+	<form name="form" action="" method="POST">
+		<input type="hidden" name="token" id="input-token">
+		<table>
+			<tr>
+				<td>
+					<h3> What are you looking for?</h3>
+				</td>
+				<td>
+					<select name="type">
+						<option value="fika">Fika</option>
+						<option value="lunch">Lunch</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<h3> Which day you are youy planning for?</h3>
+				</td>
+				<td>
+					<input name="date" type="date">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<h3> What time you want to have it?</h3>
+				</td>
+				<td>
+					<input name="time" type="time">
+				</td>
+			</tr>
+		</table>
+		<input type="submit" value="Submit">
+	</form>
+  <p>{{match}}</p>
+	<script>
+		var form = document.getElementsByTagName('form').item(0);
+	/*	form.onsubmit = function (e) {
+			// stop the regular form submission
+			e.preventDefault();
+
+			// collect the form data while iterating over the inputs
+			var data = {};
+			for (var i = 0, ii = form.length; i < ii; ++i) {
+				var input = form[i];
+				if (input.name) {
+					data[input.name] = input.value;
+				}
+			}
+
+			fetch(
+				'/', {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+				.then(call => call.json())
+				.then(x => console.log(x));
+			return false;
+		};*/
+
+	</script>
+
+</body>
+
+</html>
